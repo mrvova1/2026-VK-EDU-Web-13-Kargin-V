@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'core/css/Question_page.css' %}" rel="stylesheet">
+<link href="{% static 'core/css/pages_num_menu.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="question">
+  <div class="left-bar">
+    <img src="{% static 'img/breakdance.gif' %}" alt="mdo">
+    <div class="votes">
+      <h4 class="base-text">{{ question_item.rating }}</h4>
+      <div class="Up-Down">
+        <button class="upvote" type="button">∧</button>
+        <button class="downvote" type="button">∨</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-bar">
+    <div class="upper-bar">
+      <a href="{% url 'question' question_item.id %}" class="Headline">{{ question_item.title }}</a>
+      <h4 class="base-text">{{ question_item.text }}</h4>
+    </div>
+
+    <div class="down-bar">
+      <div class="tegs">
+        <h4 class="base-text">Tags:</h4>
+        {% for tag in question_item.tags %}
+          <a href="{% url 'tag' tag %}">#{{ tag }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div class="answers_box">
+  {% for answer in answers %}
+    {% include "includes/answer_card.html" %}
+  {% endfor %}
+</div>
+
+{% include "includes/paginator.html" %}
+
+<form class="answer-form mt-4">
+  <div class="my-answer">
+    <label class="base-text">Your answer</label>
+    <textarea id="answer-text" placeholder="Write your answer here"></textarea>
+  </div>
+
+  <div class="form-hint base-text-hints">Be clear and include code if needed.</div>
+  <button class="btn btn-success mt-3" type="submit">Post answer</button>
+</form>
+{% endblock %}

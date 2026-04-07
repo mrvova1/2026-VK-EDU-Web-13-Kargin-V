@@ -1,0 +1,34 @@
+{% load static %}
+<div class="question">
+  <div class="left-bar">
+    <img src="{% static 'img/breakdance.gif' %}" alt="mdo">
+    <div class="votes">
+      <h4 class="base-text">{{ question.rating }}</h4>
+      <div class="Up-Down">
+        <button class="upvote" type="button">∧</button>
+        <button class="downvote" type="button">∨</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-bar">
+    <div class="upper-bar">
+      <a href="{% url 'question' question.id %}" class="Headline">{{ question.title }}</a>
+      <h4 class="base-text">{{ question.text }}</h4>
+    </div>
+
+    <div class="down-bar">
+      <div class="answers">
+        <h4 class="base-text">answers</h4>
+        <h4 class="base-text">({{ question.answers_count }})</h4>
+      </div>
+
+      <div class="tegs">
+        <h4 class="base-text">Tags:</h4>
+        {% for tag in question.tags %}
+          <a href="{% url 'tag' tag %}">#{{ tag }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
