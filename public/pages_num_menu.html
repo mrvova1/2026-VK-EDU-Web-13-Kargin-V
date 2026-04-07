@@ -4,19 +4,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bootstrap demo</title>
-  <link href="static/css/base_items.css" rel="stylesheet">
+  <title>Переход</title>
   <link href="static/css/pages_num_menu.css" rel="stylesheet">
 </head>
 
-<body>
-  <div class="nums">
-    <a href="">1</a>
-    <a href="">2</a>
-    <a href="">3</a>
-    <h4 class="base-text">...</h4>
-    <a href="">5</a>
-  </div>
-</body>
-
-</html>
+<nav class="nums" aria-label="Pagination">
+  <a href="#" class="nums-prev disabled" aria-disabled="true">Prev</a>
+  <a href="#" class="active" aria-current="page">1</a>
+  <a href="#">2</a>
+  <a href="#">3</a>
+  <span class="nums-dots">...</span>
+  <a href="#">5</a>
+  <a href="#" class="nums-next">Next</a>
+</nav>

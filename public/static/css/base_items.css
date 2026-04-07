@@ -12,6 +12,13 @@
   color: #ffffff;
 }
 
+.base-text-hints {
+  margin: .25rem 0 .25rem 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: #626262;
+}
+
 a {
   --bs-link-color-rgb: 110, 168, 254;
   color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));

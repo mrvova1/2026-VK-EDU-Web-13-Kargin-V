@@ -167,3 +167,17 @@
 .big-checkbox input:checked+.checkmark::after {
     display: block;
 }
+
+.my-answer {
+    display: flex;
+    align-content: center;
+    gap: 0.5rem;
+}
+
+.my-answer label {
+    align-content: center;
+}
+
+#answer-text {
+    width: 60%;
+}

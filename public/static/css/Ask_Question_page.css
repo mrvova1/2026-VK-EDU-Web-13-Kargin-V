@@ -30,5 +30,14 @@
 }
 
 .question-form-item {
-  padding: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.form-error {
+  color: red;
+}
+
+textarea {
+  height: 100%;
 }
