@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'core/css/Questions_listing_page.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-name">
+    <p class="Headline">{{ page_heading }}</p>
+    <a href="{% url 'hot' %}">Best</a>
+  </div>
+
+  <div class="questions">
+    {% for question in questions %}
+      {% include "includes/question_card.html" %}
+    {% endfor %}
+  </div>
+
+  {% include "includes/paginator.html" %}
+</div>
+{% endblock %}

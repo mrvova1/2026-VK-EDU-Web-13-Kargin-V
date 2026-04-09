@@ -1,0 +1,30 @@
+.nums {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.nums a,
+.nums span {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #52C7AD;
+  border-radius: 8px;
+  box-shadow: 2px 2px 4px rgba(61, 105, 16, 0.25);
+  color: #fff;
+}
+
+.nums a.active {
+  background: #52C7AD;
+  color: #0d1117;
+  font-weight: 700;
+}
+
+.nums a:hover {
+  opacity: 0.9;
+}
