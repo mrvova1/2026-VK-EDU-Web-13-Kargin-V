@@ -1,0 +1,29 @@
+{% load static %}
+<div class="answer">
+  <div class="left-bar">
+    {% if answer.author.profile.avatar %}
+      <img src="{{ answer.author.profile.avatar.url }}" alt="avatar">
+    {% else %}
+      <img src="{% static 'img/breakdance.gif' %}" alt="avatar">
+    {% endif %}
+    <div class="votes">
+      <h4 class="base-text">{{ answer.rating }}</h4>
+      <div class="Up-Down">
+        <button class="upvote" type="button">∧</button>
+        <button class="downvote" type="button">∨</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-bar">
+    <div class="upper-bar">
+      <h4 class="base-text">{{ answer.text }}</h4>
+    </div>
+
+    <label class="big-checkbox base-text">
+      <input type="checkbox" {% if answer.is_correct %}checked{% endif %}>
+      <span class="checkmark"></span>
+      Correct!
+    </label>
+  </div>
+</div>

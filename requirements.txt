@@ -1,0 +1,9 @@
+﻿Django==6.0.3
+sqlparse==0.5.5
+asgiref==3.11.1
+tzdata==2025.3
+
+django-debug-toolbar
+Faker
+Pillow
+psycopg2-binary

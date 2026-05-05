@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'core/css/forms.css' %}" rel="stylesheet">
+<link href="{% static 'core/css/Ask_Question_page.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <p class="Headline">New questions</p>
+
+  <form class="question-form" method="post">
+    {% csrf_token %}
+    <h1 class="base-text question-form-item">Title</h1>
+    <div class="question-form-item">
+      <input type="text" placeholder="How can I properly link my navigation bar?" class="base-text">
+      <div class="form-error d-none base-text">Title is required.</div>
+    </div>
+
+    <h1 class="base-text question-form-item">Text</h1>
+    <div class="question-form-item">
+      <textarea placeholder="Who knows" class="base-text"></textarea>
+      <div class="form-error d-none base-text">Question text is required.</div>
+    </div>
+
+    <h1 class="base-text question-form-item">Tags</h1>
+    <input type="text" placeholder="#misteryOfAllTimes #webdevelopment" class="question-form-item base-text">
+
+    <div></div>
+    <button class="masked-button question-form-item" type="submit"></button>
+  </form>
+</div>
+{% endblock %}

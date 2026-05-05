@@ -1,0 +1,39 @@
+{% load static %}
+<div class="question">
+  <div class="left-bar">
+    {% if question.author.profile.avatar %}
+      <img src="{{ question.author.profile.avatar.url }}" alt="avatar">
+    {% else %}
+      <img src="{% static 'img/breakdance.gif' %}" alt="avatar">
+    {% endif %}
+    <div class="votes">
+      <h4 class="base-text">{{ question.rating }}</h4>
+      <div class="Up-Down">
+        <button class="upvote" type="button">∧</button>
+        <button class="downvote" type="button">∨</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-bar">
+    <div class="upper-bar">
+      <a href="{% url 'question' question.id %}" class="Headline">{{ question.title }}</a>
+      <h4 class="base-text">{{ question.text|truncatechars:200 }}</h4>
+    </div>
+
+    <div class="down-bar">
+      <div class="tegs">
+        <h4 class="base-text">Tags:</h4>
+        {% for tag in question.tags.all %}
+          <a href="{% url 'tag' tag.slug %}">#{{ tag.name }}</a>
+        {% empty %}
+          <span class="base-text-hints">Без тегов</span>
+        {% endfor %}
+      </div>
+
+      <div class="answers">
+        <span class="base-text">Ответов: {{ question.answers_count }}</span>
+      </div>
+    </div>
+  </div>
+</div>

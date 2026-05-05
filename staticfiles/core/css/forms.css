@@ -1,0 +1,40 @@
+.auth-page {
+  max-width: 760px;
+}
+
+.auth-card {
+  display: grid;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.auth-form {
+  display: grid;
+  gap: 18px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.remember-me {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
+.auth-link,
+.auth-bottom a {
+  color: #7ab7ff;
+  text-decoration: none;
+}
+
+.auth-link:hover,
+.auth-bottom a:hover {
+  text-decoration: underline;
+}

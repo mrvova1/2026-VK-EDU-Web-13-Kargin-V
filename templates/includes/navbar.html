@@ -1,0 +1,39 @@
+{% load static %}
+<header class="site-header">
+  <nav class="navbar navbar-expand-lg nav_bar_color">
+    <div class="container-fluid gap-3">
+      <a class="navbar-brand text-white fw-semibold" href="{% url 'home' %}">EDU-Web</a>
+
+      <form class="d-flex search_bar" role="search" action="{% url 'search' %}" method="get">
+        <input
+          class="form-control form-control-my"
+          type="search"
+          name="q"
+          value="{{ request.GET.q }}"
+          placeholder="Поиск по вопросам, тексту и тегам"
+          aria-label="Search"
+        >
+        <button class="btn btn-outline-success ms-2" type="submit">Search</button>
+      </form>
+
+      <a href="{% url 'ask' %}" class="btn btn-success text-nowrap">Создать вопрос</a>
+
+      <div class="user-block ms-2">
+        {% if user.is_authenticated %}
+          <div class="auth-block">
+            <a href="{% url 'profile' %}" class="d-flex align-items-center gap-2 text-decoration-none text-white">
+              <img src="{% static 'img/breakdance.gif' %}" alt="User avatar" width="32" height="32" class="rounded-circle">
+              <span class="d-none d-md-inline">{{ user.username }}</span>
+              <i class="bi bi-caret-down-fill"></i>
+            </a>
+          </div>
+        {% else %}
+          <div class="unauth-block">
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-light btn-sm">Signup</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+</header>
