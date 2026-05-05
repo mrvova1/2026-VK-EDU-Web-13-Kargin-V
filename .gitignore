@@ -10,3 +10,5 @@ media/
 .vscode/
 .DS_Store
 .env
+.env.local
+.env.docker

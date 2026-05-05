@@ -1,7 +1,11 @@
 {% load static %}
 <div class="answer">
   <div class="left-bar">
-    <img src="{% static 'img/breakdance.gif' %}" alt="mdo">
+    {% if answer.author.profile.avatar %}
+      <img src="{{ answer.author.profile.avatar.url }}" alt="avatar">
+    {% else %}
+      <img src="{% static 'img/breakdance.gif' %}" alt="avatar">
+    {% endif %}
     <div class="votes">
       <h4 class="base-text">{{ answer.rating }}</h4>
       <div class="Up-Down">

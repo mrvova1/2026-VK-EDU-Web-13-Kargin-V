@@ -4,6 +4,21 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def load_env_file(path: Path):
+    if not path.exists():
+        return
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+load_env_file(BASE_DIR / ".env.local")
+
+
 def env(name: str, default: str = "") -> str:
     return os.getenv(name, default)
 
@@ -14,6 +29,7 @@ ALLOWED_HOSTS = [host.strip() for host in env("ALLOWED_HOSTS", "127.0.0.1,localh
 
 INSTALLED_APPS = [
     "django.contrib.admin",
+    "debug_toolbar",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -24,6 +40,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -45,6 +62,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.sidebar_data",
             ],
         },
     },
@@ -54,8 +72,12 @@ WSGI_APPLICATION = "application.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": env("DB_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": BASE_DIR / env("DB_NAME", "db.sqlite3"),
+        "ENGINE": env("DB_ENGINE", "django.db.backends.postgresql"),
+        "NAME": env("DB_NAME", "vkweb"),
+        "USER": env("DB_USER", "vkweb"),
+        "PASSWORD": env("DB_PASSWORD", "vkweb"),
+        "HOST": env("DB_HOST", "127.0.0.1"),
+        "PORT": env("DB_PORT", "5432"),
     }
 }
 
@@ -83,3 +105,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
+
+INTERNAL_IPS = ["127.0.0.1", "localhost"]

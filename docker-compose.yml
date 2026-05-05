@@ -1,11 +1,30 @@
 services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
   web:
     build: .
-    ports:
-      - "8000:8000"
+    restart: always
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
     volumes:
       - .:/app
       - media:/app/media
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000
 
 volumes:
+  postgres_data:
   media:

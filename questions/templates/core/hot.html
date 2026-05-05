@@ -17,6 +17,8 @@
   <div class="questions">
     {% for question in questions %}
       {% include "includes/question_card.html" %}
+    {% empty %}
+      <p class="base-text">Пока нет ни одного вопроса.</p>
     {% endfor %}
   </div>
 

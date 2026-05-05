@@ -4,9 +4,16 @@
     <div class="container-fluid gap-3">
       <a class="navbar-brand text-white fw-semibold" href="{% url 'home' %}">EDU-Web</a>
 
-      <form class="d-flex search_bar" role="search" action="{% url 'home' %}" method="get">
-        <input class="form-control form-control-my me-2" type="search" placeholder="Search" aria-label="Search" name="q">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      <form class="d-flex search_bar" role="search" action="{% url 'search' %}" method="get">
+        <input
+          class="form-control form-control-my"
+          type="search"
+          name="q"
+          value="{{ request.GET.q }}"
+          placeholder="Поиск по вопросам, тексту и тегам"
+          aria-label="Search"
+        >
+        <button class="btn btn-outline-success ms-2" type="submit">Search</button>
       </form>
 
       <a href="{% url 'ask' %}" class="btn btn-success text-nowrap">Создать вопрос</a>

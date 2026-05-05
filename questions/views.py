@@ -1,41 +1,12 @@
-from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, render
+
+from .models import Profile, Question, Tag
 from .utils import paginate
 
 
-def build_questions(prefix="Question", count=29):
-    questions = []
-    for i in range(1, count + 1):
-        questions.append(
-            {
-                "id": i,
-                "title": f"{prefix} {i}",
-                "text": f"Question text {i}. This is a placeholder description.",
-                "answers_count": (i * 3) % 17,
-                "rating": (count - i) * 2,
-                "tags": [f"tag{i % 5 + 1}", f"tag{i % 3 + 1}"],
-                "author": f"user{i % 4 + 1}",
-            }
-        )
-    return questions
-
-
-def build_answers(question_id, count=7):
-    answers = []
-    for i in range(1, count + 1):
-        answers.append(
-            {
-                "id": i,
-                "text": f"Answer {i} for question {question_id}. Placeholder answer text.",
-                "rating": i * 2 - 3,
-                "author": f"user{i % 3 + 1}",
-                "is_correct": i == 2,
-            }
-        )
-    return answers
-
-
 def index(request):
-    questions = build_questions("New question", 29)
+    questions = Question.objects.new()
     page = paginate(questions, request, per_page=10)
     return render(
         request,
@@ -44,13 +15,13 @@ def index(request):
             "page_obj": page,
             "questions": page.object_list,
             "page_title": "Новые вопросы",
-            "page_heading": "New questions",
+            "page_heading": "Новые вопросы",
         },
     )
 
 
 def hot(request):
-    questions = sorted(build_questions("Hot question", 29), key=lambda item: item["rating"], reverse=True)
+    questions = Question.objects.hot()
     page = paginate(questions, request, per_page=10)
     return render(
         request,
@@ -59,16 +30,31 @@ def hot(request):
             "page_obj": page,
             "questions": page.object_list,
             "page_title": "Лучшие вопросы",
-            "page_heading": "Best questions",
+            "page_heading": "Лучшие вопросы",
         },
     )
 
 
-def tag(request, tag):
-    questions = [q for q in build_questions("Tagged question", 29) if tag in q["tags"]]
-    if not questions:
-        questions = build_questions(f"Questions for #{tag}", 7)
+def search(request):
+    query = request.GET.get("q", "").strip()
+    questions = Question.objects.search(query)
+    page = paginate(questions, request, per_page=10)
 
+    return render(
+        request,
+        "core/index.html",
+        {
+            "page_obj": page,
+            "questions": page.object_list,
+            "page_title": f"Поиск: {query}" if query else "Поиск",
+            "page_heading": f"Результаты поиска: {query}" if query else "Поиск",
+        },
+    )
+
+
+def tag(request, tag_slug):
+    tag_obj = get_object_or_404(Tag, slug=tag_slug)
+    questions = Question.objects.by_tag(tag_slug)
     page = paginate(questions, request, per_page=10)
     return render(
         request,
@@ -76,25 +62,20 @@ def tag(request, tag):
         {
             "page_obj": page,
             "questions": page.object_list,
-            "tag": tag,
-            "page_title": f"Вопросы по тегу #{tag}",
-            "page_heading": f"Tag: #{tag}",
+            "tag": tag_obj,
+            "page_title": f"Тег #{tag_obj.name}",
+            "page_heading": f"Тег: #{tag_obj.name}",
         },
     )
 
 
 def question(request, question_id):
-    question_item = {
-        "id": question_id,
-        "title": f"Question {question_id}",
-        "text": "######### #### ########## ######### ##### #### ## ##########",
-        "rating": 0,
-        "tags": ["tag2", "tag3", "tag4"],
-        "author": "user1",
-    }
-
-    answers = build_answers(question_id, 7)
-    page = paginate(answers, request, per_page=5)
+    question_item = get_object_or_404(
+        Question.objects.with_related(),
+        pk=question_id,
+    )
+    answers = question_item.answers.select_related("author").all()
+    page = paginate(answers, request, per_page=10)
 
     return render(
         request,
@@ -103,6 +84,27 @@ def question(request, question_id):
             "question_item": question_item,
             "answers": page.object_list,
             "page_obj": page,
-            "page_title": question_item["title"],
+            "page_title": question_item.title,
+        },
+    )
+
+
+def user_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    profile, _ = Profile.objects.get_or_create(user=user)
+
+    user_questions = user.questions.select_related("author").prefetch_related("tags")
+    page = paginate(user_questions, request, per_page=10)
+
+    return render(
+        request,
+        "core/user_profile.html",
+        {
+            "profile_user": user,
+            "profile": profile,
+            "questions": page.object_list,
+            "page_obj": page,
+            "page_title": f"Пользователь {user.username}",
+            "page_heading": f"Пользователь: {user.username}",
         },
     )
