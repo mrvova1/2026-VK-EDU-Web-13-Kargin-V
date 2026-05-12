@@ -16,13 +16,30 @@
     {% else %}
       <img src="{% static 'img/breakdance.gif' %}" alt="avatar">
     {% endif %}
-    <div class="votes">
-      <h4 class="base-text">{{ question_item.rating }}</h4>
-      <div class="Up-Down">
-        <button class="upvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∧</button>
-        <button class="downvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∨</button>
-      </div>
-    </div>
+    <div class="votes" data-question-id="{{ question_item.id }}">
+  <h4 class="base-text js-rating">{{ question_item.rating }}</h4>
+  <div class="Up-Down">
+    <button
+      class="upvote js-question-vote"
+      type="button"
+      data-question-id="{{ question_item.id }}"
+      data-vote-type="like"
+      {% if not user.is_authenticated or question_item.user_vote == 1 %}disabled{% endif %}
+      title="{% if not user.is_authenticated %}Войдите, чтобы голосовать{% endif %}"
+    >∧</button>
+
+    <button
+      class="downvote js-question-vote"
+      type="button"
+      data-question-id="{{ question_item.id }}"
+      data-vote-type="dislike"
+      {% if not user.is_authenticated or question_item.user_vote == -1 %}disabled{% endif %}
+      title="{% if not user.is_authenticated %}Войдите, чтобы голосовать{% endif %}"
+    >∨</button>
+  </div>
+</div>
+
+
   </div>
 
   <div class="right-bar">

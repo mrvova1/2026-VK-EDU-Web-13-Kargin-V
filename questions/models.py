@@ -1,9 +1,19 @@
 from django.conf import settings
+from pathlib import Path
+from uuid import uuid4
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
 from .managers import QuestionManager, TagManager
+
+
+def avatar_upload_to(instance, filename: str) -> str:
+    ext = Path(filename).suffix.lower()
+    if not ext:
+        ext = ".jpg"
+    return f"avatars/{uuid4().hex}{ext}"
 
 
 class Tag(models.Model):
@@ -83,7 +93,7 @@ class Profile(models.Model):
         verbose_name="Пользователь",
     )
     nickname = models.CharField("Никнейм", max_length=64, blank=True)
-    avatar = models.ImageField("Аватар", upload_to="avatars/", blank=True, null=True)
+    avatar = models.ImageField("Аватар", upload_to=avatar_upload_to, blank=True, null=True)
     bio = models.TextField("О себе", blank=True)
 
     class Meta:

@@ -1,18 +1,32 @@
 {% load static %}
-<div class="question">
+<div class="question" data-question-id="{{ question.id }}">
   <div class="left-bar">
     {% if question.author.profile.avatar %}
       <img src="{{ question.author.profile.avatar.url }}" alt="avatar">
     {% else %}
       <img src="{% static 'img/breakdance.gif' %}" alt="avatar">
     {% endif %}
-    <div class="votes">
-      <h4 class="base-text">{{ question.rating }}</h4>
-      <div class="Up-Down">
-        <button class="upvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∧</button>
-        <button class="downvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∨</button>
-      </div>
-    </div>
+
+    <div class="votes" data-question-id="{{ question.id }}">
+  <h4 class="base-text js-rating">{{ question.rating }}</h4>
+  <div class="Up-Down">
+    <button
+      class="upvote js-question-vote"
+      type="button"
+      data-question-id="{{ question.id }}"
+      data-vote-type="like"
+      {% if not user.is_authenticated or question.user_vote == 1 %}disabled{% endif %}
+    >∧</button>
+
+    <button
+      class="downvote js-question-vote"
+      type="button"
+      data-question-id="{{ question.id }}"
+      data-vote-type="dislike"
+      {% if not user.is_authenticated or question.user_vote == -1 %}disabled{% endif %}
+    >∨</button>
+  </div>
+</div>
   </div>
 
   <div class="right-bar">

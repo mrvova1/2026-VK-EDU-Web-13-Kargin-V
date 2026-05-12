@@ -1,16 +1,29 @@
 {% load static %}
-<div class="answer" id="answer-{{ answer.id }}">
+<div class="answer" id="answer-{{ answer.id }}" data-question-id="{{ answer.question_id }}" data-answer-id="{{ answer.id }}">
   <div class="left-bar">
     {% if answer.author.profile.avatar %}
       <img src="{{ answer.author.profile.avatar.url }}" alt="avatar">
     {% else %}
       <img src="{% static 'img/breakdance.gif' %}" alt="avatar">
     {% endif %}
+
     <div class="votes">
-      <h4 class="base-text">{{ answer.rating }}</h4>
+      <h4 class="base-text js-rating">{{ answer.rating }}</h4>
       <div class="Up-Down">
-        <button class="upvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∧</button>
-        <button class="downvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∨</button>
+        <button
+          class="upvote js-answer-vote"
+          type="button"
+          data-answer-id="{{ answer.id }}"
+          data-vote-type="like"
+          {% if not user.is_authenticated %}disabled{% endif %}
+        >∧</button>
+        <button
+          class="downvote js-answer-vote"
+          type="button"
+          data-answer-id="{{ answer.id }}"
+          data-vote-type="dislike"
+          {% if not user.is_authenticated %}disabled{% endif %}
+        >∨</button>
       </div>
     </div>
   </div>
@@ -20,10 +33,20 @@
       <h4 class="base-text">{{ answer.text }}</h4>
     </div>
 
-    <label class="big-checkbox base-text">
-      <input type="checkbox" {% if answer.is_correct %}checked{% endif %} disabled>
-      <span class="checkmark"></span>
-      Correct!
-    </label>
+    {% if can_choose_correct_answer %}
+      <label class="big-checkbox base-text">
+        <input
+          type="checkbox"
+          class="js-correct-answer"
+          data-question-id="{{ answer.question_id }}"
+          data-answer-id="{{ answer.id }}"
+          {% if answer.is_correct %}checked{% endif %}
+        >
+        <span class="checkmark"></span>
+        Correct!
+      </label>
+    {% elif answer.is_correct %}
+      <div class="base-text text-success fw-semibold">Correct answer</div>
+    {% endif %}
   </div>
 </div>

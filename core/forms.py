@@ -7,6 +7,10 @@ from questions.models import Profile
 
 User = get_user_model()
 
+from pathlib import Path
+
+MAX_AVATAR_SIZE = 2 * 1024 * 1024
+ALLOWED_AVATAR_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -149,6 +153,14 @@ class ProfileForm(forms.ModelForm):
             "autocomplete": "email",
         }),
     )
+    avatar = forms.ImageField(
+        label="Аватар",
+        required=False,
+        widget=forms.ClearableFileInput(attrs={
+            "class": "form-control form-control-lg",
+            "accept": "image/*",
+        }),
+    )
 
     class Meta:
         model = Profile
@@ -157,9 +169,6 @@ class ProfileForm(forms.ModelForm):
             "nickname": forms.TextInput(attrs={
                 "class": "form-control form-control-lg",
                 "placeholder": "Никнейм",
-            }),
-            "avatar": forms.ClearableFileInput(attrs={
-                "class": "form-control form-control-lg",
             }),
         }
 
@@ -183,6 +192,22 @@ class ProfileForm(forms.ModelForm):
         if exists:
             raise forms.ValidationError("Пользователь с таким email уже существует.")
         return email
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get("avatar")
+        if not avatar:
+            return avatar
+
+        ext = Path(avatar.name).suffix.lower()
+        if ext not in ALLOWED_AVATAR_EXTENSIONS:
+            raise forms.ValidationError(
+                "Недопустимый формат файла. Разрешены JPG, JPEG, PNG, GIF и WEBP."
+            )
+
+        if avatar.size > MAX_AVATAR_SIZE:
+            raise forms.ValidationError("Файл слишком большой. Максимум — 2 МБ.")
+
+        return avatar
 
     def save(self, commit=True):
         profile = super().save(commit=False)
