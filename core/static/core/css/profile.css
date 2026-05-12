@@ -1,0 +1,38 @@
+.profile-form {
+  width: 95%;
+  display: grid;
+  grid-template-columns: 100px 90%;
+  grid-template-rows: 1fr 1fr 1fr 6fr auto;
+  gap: 20px;
+}
+
+.profile-form-item {
+  padding: 5px;
+  margin-top: auto;
+  margin-bottom: auto;
+
+}
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.choice {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar-img {
+  width: 10%;
+  height: auto;
+  border-radius: 50%;
+}
+
+.profile-form button {
+  width: 200px;
+  height: 50px;
+}

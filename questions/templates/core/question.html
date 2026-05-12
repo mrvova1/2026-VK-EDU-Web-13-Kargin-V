@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'core/css/Question_page.css' %}" rel="stylesheet">
+<link href="{% static 'core/css/pages_num_menu.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="question">
+  <div class="left-bar">
+    {% if question_item.author.profile.avatar %}
+      <img src="{{ question_item.author.profile.avatar.url }}" alt="avatar">
+    {% else %}
+      <img src="{% static 'img/breakdance.gif' %}" alt="avatar">
+    {% endif %}
+    <div class="votes">
+      <h4 class="base-text">{{ question_item.rating }}</h4>
+      <div class="Up-Down">
+        <button class="upvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∧</button>
+        <button class="downvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∨</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-bar">
+    <div class="upper-bar">
+      <h2 class="Headline">{{ question_item.title }}</h2>
+      <h4 class="base-text">{{ question_item.text }}</h4>
+    </div>
+
+    <div class="down-bar">
+      <div class="tegs">
+        <h4 class="base-text">Tags:</h4>
+        {% for tag in question_item.tags.all %}
+          <a href="{% url 'tag' tag.slug %}">#{{ tag.name }}</a>
+        {% empty %}
+          <span class="base-text-hints">Без тегов</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div class="answers_box">
+  {% for answer in answers %}
+    {% include "includes/answer_card.html" %}
+  {% empty %}
+    <p class="base-text">Пока нет ни одного ответа к этому вопросу.</p>
+  {% endfor %}
+</div>
+
+{% if user.is_authenticated %}
+  <hr>
+  <form method="post" class="my-answer">
+    {% csrf_token %}
+    <div style="width:100%;">
+      {{ answer_form.text }}
+      {{ answer_form.text.errors }}
+      {% if answer_form.non_field_errors %}
+        <div class="alert alert-danger mt-2">{{ answer_form.non_field_errors }}</div>
+      {% endif %}
+    </div>
+    <button class="btn btn-success" type="submit">Ответить</button>
+  </form>
+{% else %}
+  <div class="alert alert-secondary mt-4">
+    Войдите, чтобы оставить ответ.
+  </div>
+{% endif %}
+
+{% include "includes/paginator.html" %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% load static %}
+<aside class="r-sidebar d-none d-md-block">
+  <div id="r-sidebar">
+    <div class="section">
+      <h3 class="block-heading">Популярные теги</h3>
+      <div class="links-row">
+        {% for tag in popular_tags %}
+          <a href="{% url 'tag' tag.slug %}">#{{ tag.name }}</a>
+        {% empty %}
+          <span class="text-white-muted">Пока нет тегов</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="block-heading">Лучшие пользователи</h3>
+      <div class="links-column">
+        {% for user in best_users %}
+          <a href="{% url 'user_profile' user.username %}">
+            {{ user.username }}
+          </a>
+        {% empty %}
+          <span class="text-white-muted">Пока нет пользователей</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</aside>
