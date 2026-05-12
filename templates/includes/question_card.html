@@ -9,8 +9,8 @@
     <div class="votes">
       <h4 class="base-text">{{ question.rating }}</h4>
       <div class="Up-Down">
-        <button class="upvote" type="button">∧</button>
-        <button class="downvote" type="button">∨</button>
+        <button class="upvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∧</button>
+        <button class="downvote" type="button" {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}>∨</button>
       </div>
     </div>
   </div>

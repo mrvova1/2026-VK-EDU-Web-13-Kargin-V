@@ -10,27 +10,35 @@
 
 {% block content %}
 <div class="container py-4">
-  <p class="Headline">New questions</p>
+  <p class="Headline">New question</p>
 
-  <form class="question-form" method="post">
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <form class="question-form" method="post" novalidate>
     {% csrf_token %}
+
     <h1 class="base-text question-form-item">Title</h1>
     <div class="question-form-item">
-      <input type="text" placeholder="How can I properly link my navigation bar?" class="base-text">
-      <div class="form-error d-none base-text">Title is required.</div>
+      {{ form.title }}
+      {{ form.title.errors }}
     </div>
 
     <h1 class="base-text question-form-item">Text</h1>
     <div class="question-form-item">
-      <textarea placeholder="Who knows" class="base-text"></textarea>
-      <div class="form-error d-none base-text">Question text is required.</div>
+      {{ form.text }}
+      {{ form.text.errors }}
     </div>
 
     <h1 class="base-text question-form-item">Tags</h1>
-    <input type="text" placeholder="#misteryOfAllTimes #webdevelopment" class="question-form-item base-text">
+    <div class="question-form-item">
+      {{ form.tags }}
+      {{ form.tags.errors }}
+    </div>
 
     <div></div>
-    <button class="masked-button question-form-item" type="submit"></button>
+    <button class="masked-button question-form-item" type="submit" title="Send question"></button>
   </form>
 </div>
 {% endblock %}

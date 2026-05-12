@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
+from core.forms import LoginForm
+from .forms import AnswerForm
 from .models import Profile, Question, Tag
 from .utils import paginate
 
@@ -39,7 +42,6 @@ def search(request):
     query = request.GET.get("q", "").strip()
     questions = Question.objects.search(query)
     page = paginate(questions, request, per_page=10)
-
     return render(
         request,
         "core/index.html",
@@ -74,9 +76,32 @@ def question(request, question_id):
         Question.objects.with_related(),
         pk=question_id,
     )
-    answers = question_item.answers.select_related("author").all()
-    page = paginate(answers, request, per_page=10)
+    answers_qs = question_item.answers.select_related("author").all()
 
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+
+        form = AnswerForm(request.POST, question=question_item, author=request.user)
+        if form.is_valid():
+            answer = form.save()
+            ordered_ids = list(
+                question_item.answers.order_by(
+                    "-is_correct",
+                    "-rating",
+                    "-created_at",
+                    "-id",
+                ).values_list("id", flat=True)
+            )
+            position = ordered_ids.index(answer.id) + 1
+            page_number = (position - 1) // 10 + 1
+            return redirect(
+                f"{question_item.get_absolute_url()}?page={page_number}#answer-{answer.id}"
+            )
+    else:
+        form = AnswerForm(question=question_item, author=request.user if request.user.is_authenticated else None)
+
+    page = paginate(answers_qs, request, per_page=10)
     return render(
         request,
         "core/question.html",
@@ -84,6 +109,7 @@ def question(request, question_id):
             "question_item": question_item,
             "answers": page.object_list,
             "page_obj": page,
+            "answer_form": form if request.user.is_authenticated else None,
             "page_title": question_item.title,
         },
     )

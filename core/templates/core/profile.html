@@ -11,22 +11,41 @@
 <div class="container py-4">
   <p class="Headline">Profile</p>
 
-  <form class="profile-form" method="post" enctype="multipart/form-data">
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <form class="profile-form" method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
+
     <h1 class="base-text profile-form-item">Login</h1>
-    <input type="text" class="profile-form-item base-text" placeholder="Your login">
+    <div class="profile-form-item">
+      {{ form.username }}
+      {{ form.username.errors }}
+    </div>
 
     <h1 class="base-text profile-form-item">Email</h1>
-    <input type="email" class="profile-form-item base-text" placeholder="name@example.com">
+    <div class="profile-form-item">
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
 
     <h1 class="base-text profile-form-item">NickName</h1>
-    <input type="text" class="profile-form-item base-text" placeholder="Your nickname">
+    <div class="profile-form-item">
+      {{ form.nickname }}
+      {{ form.nickname.errors }}
+    </div>
 
     <h1 class="base-text profile-form-item">Upload avatar</h1>
     <div class="avatar">
-      <img src="{% static 'img/breakdance.gif' %}" alt="mdo" class="avatar-img">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="avatar" class="avatar-img">
+      {% else %}
+        <img src="{% static 'img/breakdance.gif' %}" alt="avatar" class="avatar-img">
+      {% endif %}
       <div class="choice">
-        <input type="file" class="base-text">
+        {{ form.avatar }}
+        {{ form.avatar.errors }}
       </div>
     </div>
 
