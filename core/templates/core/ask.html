@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'core/css/forms.css' %}" rel="stylesheet">
+<link href="{% static 'core/css/Ask_Question_page.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <p class="Headline">New question</p>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <form class="question-form" method="post" novalidate>
+    {% csrf_token %}
+
+    <h1 class="base-text question-form-item">Title</h1>
+    <div class="question-form-item">
+      {{ form.title }}
+      {{ form.title.errors }}
+    </div>
+
+    <h1 class="base-text question-form-item">Text</h1>
+    <div class="question-form-item">
+      {{ form.text }}
+      {{ form.text.errors }}
+    </div>
+
+    <h1 class="base-text question-form-item">Tags</h1>
+    <div class="question-form-item">
+      {{ form.tags }}
+      {{ form.tags.errors }}
+    </div>
+
+    <div></div>
+    <button class="masked-button question-form-item" type="submit" title="Send question"></button>
+  </form>
+</div>
+{% endblock %}

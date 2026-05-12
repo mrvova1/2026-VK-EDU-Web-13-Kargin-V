@@ -1,0 +1,43 @@
+.masked-button {
+  width: 200px;
+  height: 200px;
+  background-image: url('../img/AskButtonWText.png');
+  background-size: contain;
+
+  -webkit-mask-image: url('../img/AskButtonWText.png');
+  mask-image: url('../img/AskButtonWText.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.masked-button:hover {
+  transform: scale(1.1);
+}
+
+.masked-button:active {
+  transform: scale(0.95);
+}
+
+.question-form {
+  display: grid;
+  grid-template-columns: 100px 90%;
+  grid-template-rows: 1fr 3fr 1fr auto;
+  gap: 10px;
+}
+
+.question-form-item {
+  display: grid;
+  gap: 8px;
+}
+
+.form-error {
+  color: red;
+}
+
+textarea {
+  height: 100%;
+}

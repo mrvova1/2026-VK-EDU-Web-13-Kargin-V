@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'core/css/profile.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <p class="Headline">Profile</p>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <form class="profile-form" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+
+    <h1 class="base-text profile-form-item">Login</h1>
+    <div class="profile-form-item">
+      {{ form.username }}
+      {{ form.username.errors }}
+    </div>
+
+    <h1 class="base-text profile-form-item">Email</h1>
+    <div class="profile-form-item">
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
+
+    <h1 class="base-text profile-form-item">NickName</h1>
+    <div class="profile-form-item">
+      {{ form.nickname }}
+      {{ form.nickname.errors }}
+    </div>
+
+    <h1 class="base-text profile-form-item">Upload avatar</h1>
+    <div class="avatar">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="avatar" class="avatar-img">
+      {% else %}
+        <img src="{% static 'img/breakdance.gif' %}" alt="avatar" class="avatar-img">
+      {% endif %}
+      <div class="choice">
+        {{ form.avatar }}
+        {{ form.avatar.errors }}
+      </div>
+    </div>
+
+    <div></div>
+    <button class="btn btn-outline-success" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}

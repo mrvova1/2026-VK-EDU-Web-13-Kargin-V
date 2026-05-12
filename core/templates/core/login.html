@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block left_sidebar %}{% endblock %}
+{% block right_sidebar %}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'core/css/forms.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<main class="container py-5 auth-page">
+  <section class="auth-card">
+    <p class="Headline mb-4">Login</p>
+
+    <form class="auth-form" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="login-username" class="base-text">Username or email</label>
+        <input id="login-username" type="text" placeholder="name@example.com" autocomplete="username" required>
+      </div>
+
+      <div class="form-group">
+        <label for="login-password" class="base-text">Password</label>
+        <input id="login-password" type="password" placeholder="Your password" autocomplete="current-password" required>
+      </div>
+
+      <button class="btn btn-success btn-lg w-100" type="submit">Sign in</button>
+
+      <p class="auth-bottom mb-0 base-text-hints">
+        No account yet?
+        <a href="{% url 'signup' %}">Create one</a>
+      </p>
+    </form>
+  </section>
+</main>
+{% endblock %}
