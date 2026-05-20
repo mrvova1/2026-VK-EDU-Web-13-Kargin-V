@@ -1,0 +1,71 @@
+.auth-page {
+  max-width: 760px;
+}
+
+.auth-card {
+  display: grid;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.auth-form {
+  display: grid;
+  gap: 18px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.remember-me {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
+.auth-link,
+.auth-bottom a {
+  color: #7ab7ff;
+  text-decoration: none;
+}
+
+.auth-link:hover,
+.auth-bottom a:hover {
+  text-decoration: underline;
+}
+
+.auth-card,
+.auth-card label,
+.auth-card p,
+.auth-card a,
+.auth-card .helptext,
+.auth-card .errorlist {
+  color: #fff;
+}
+
+.auth-card input,
+.auth-card textarea,
+.auth-card select {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.auth-card input::placeholder,
+.auth-card textarea::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.auth-card input:focus,
+.auth-card textarea:focus,
+.auth-card select:focus {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: none;
+}
