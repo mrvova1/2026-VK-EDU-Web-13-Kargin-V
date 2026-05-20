@@ -24,7 +24,60 @@ services:
     ports:
       - "8000:8000"
     command: python manage.py runserver 0.0.0.0:8000
+  
+  centrifugo:
+    image: centrifugo/centrifugo:v5
+    container_name: centrifugo
+    command: centrifugo --config=config.json
+    volumes:
+      - ./centrifugo/config.json:/centrifugo/config.json
+    ports:
+      - "8001:8000"
+    environment:
+      CENTRIFUGO_SECRET: ${CENTRIFUGO_SECRET}
+      CENTRIFUGO_API_KEY: ${CENTRIFUGO_API_KEY}
+
+  maildev:
+    image: maildev/maildev
+    container_name: maildev
+    ports:
+      - "1080:1080" 
+      - "1025:1025"  
+      
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  celery:
+    build: .
+    restart: always
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/app
+    command: celery -A application worker -l info
+
+  celerybeat:
+    build: .
+    restart: always
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+      - redis
+      - celery
+    volumes:
+      - .:/app
+    command: celery -A application beat -l info --scheduler redbeat.RedBeatScheduler
 
 volumes:
+  redis_data:
   postgres_data:
   media:

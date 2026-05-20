@@ -89,6 +89,11 @@
     Войдите, чтобы оставить ответ.
   </div>
 {% endif %}
-
+<script type="module">
+  import { initCentrifugo } from "{% static 'js/centrifugo_client.js' %}";
+  fetch("{% url 'centrifugo_token' %}?question_id={{ question_item.id }}")
+    .then(r => r.json())
+    .then(data => initCentrifugo({{ question_item.id }}, data.token));
+</script>
 {% include "includes/paginator.html" %}
 {% endblock %}

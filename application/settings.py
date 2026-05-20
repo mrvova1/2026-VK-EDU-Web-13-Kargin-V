@@ -95,7 +95,11 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    BASE_DIR / "core/static",
+    BASE_DIR / "questions/static",
+]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
@@ -108,3 +112,53 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
 INTERNAL_IPS = ["127.0.0.1", "localhost"]
+
+
+# ---------- REDIS ----------
+REDIS_HOST = env("REDIS_HOST", "redis")
+REDIS_PORT = env("REDIS_PORT", "6379")
+REDIS_CACHE_DB = env("REDIS_CACHE_DB", "1")
+REDIS_BROKER_DB = env("REDIS_BROKER_DB", "2")
+REDIS_BEAT_DB = env("REDIS_BEAT_DB", "3")
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CACHE_DB}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "TIMEOUT": 60 * 10,
+    }
+}
+
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BROKER_DB}"
+CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BROKER_DB}"
+CELERY_BEAT_SCHEDULER = "redbeat.RedBeatScheduler"
+CELERY_REDBEAT_REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BEAT_DB}"
+
+# ---------- EMAIL (MailDev) ----------
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env("EMAIL_HOST", "maildev")
+EMAIL_PORT = env("EMAIL_PORT", "1025")
+EMAIL_USE_TLS = env("EMAIL_USE_TLS", "False").lower() == "true"
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "noreply@eduweb.com")
+
+# ---------- CENTRIFUGO ----------
+CENTRIFUGO_URL = env("CENTRIFUGO_URL", "http://centrifugo:8000")
+CENTRIFUGO_API_KEY = env("CENTRIFUGO_API_KEY", "default_api_key")
+CENTRIFUGO_SECRET = env("CENTRIFUGO_SECRET", "default_secret")
+CENTRIFUGO_NAMESPACE = "questions"
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    "update-popular-tags": {
+        "task": "questions.tasks.update_popular_tags_cache",
+        "schedule": crontab(hour="*/6"), 
+    },
+    "update-best-users": {
+        "task": "questions.tasks.update_best_users_cache",
+        "schedule": crontab(hour="*/6"),
+    },
+}

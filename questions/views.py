@@ -9,7 +9,7 @@ from core.forms import LoginForm
 from .forms import AnswerForm, AnswerVoteForm, CorrectAnswerForm, QuestionVoteForm
 from .models import Answer, AnswerLike, Profile, Question, QuestionLike, Tag
 from .utils import paginate
-
+from .tasks import send_new_answer_email, send_new_answer_notification
 
 def _json_error(message, status=400, code="error", **extra):
     payload = {
@@ -181,6 +181,26 @@ def question(request, question_id):
             )
             position = ordered_ids.index(answer.id) + 1
             page_number = (position - 1) // 10 + 1
+
+            send_new_answer_email.delay(
+                    question_title=question_item.title,
+                    author_email=question_item.author.email,
+                    answer_preview=answer.text[:100],
+                    question_url=request.build_absolute_uri(question_item.get_absolute_url())
+                )
+
+            send_new_answer_notification.delay(
+                    question_id=question_item.id,
+                    answer_data={
+                        "id": answer.id,
+                        "text": answer.text[:200],
+                        "author": answer.author.username,
+                        "author_avatar": answer.author.profile.avatar.url if answer.author.profile.avatar else None,
+                        "rating": answer.rating,
+                        "created_at": answer.created_at.isoformat(),
+                    }
+                )
+
             return redirect(
                 f"{question_item.get_absolute_url()}?page={page_number}#answer-{answer.id}"
             )

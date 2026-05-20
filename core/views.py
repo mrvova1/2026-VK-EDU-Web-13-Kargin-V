@@ -10,6 +10,9 @@ from questions.models import Profile
 
 from .forms import LoginForm, ProfileForm, SignupForm
 
+import jwt
+from datetime import datetime, timedelta
+from django.conf import settings
 
 def login_view(request):
     form = LoginForm(
@@ -91,3 +94,22 @@ def logout_view(request):
 
     logout(request)
     return redirect(next_url)
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def centrifugo_token(request):
+    question_id = request.GET.get('question_id')
+    if not question_id:
+        return JsonResponse({"error": "question_id required"}, status=400)
+    user = request.user
+    if not user.is_authenticated:
+        return JsonResponse({"error": "unauthorized"}, status=401)
+    payload = {
+        "sub": str(user.id),
+        "exp": datetime.utcnow() + timedelta(hours=1),
+        "channel": f"{settings.CENTRIFUGO_NAMESPACE}:{request.GET.get('question_id')}",
+    }
+    token = jwt.encode(payload, settings.CENTRIFUGO_SECRET, algorithm="HS256")
+    return JsonResponse({"token": token})

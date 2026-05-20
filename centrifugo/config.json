@@ -1,0 +1,18 @@
+{
+  "token_hmac_secret_key": "${CENTRIFUGO_SECRET}",
+  "admin_password": "",
+  "admin_secret": "",
+  "api_key": "${CENTRIFUGO_API_KEY}",
+  "allowed_origins": ["*"],
+  "namespaces": [
+    {
+      "name": "questions",
+      "anonymous": false,
+      "publish": false,
+      "subscribe_to_publish": false,
+      "presence": true,
+      "history_size": 10,
+      "history_ttl": "60s"
+    }
+  ]
+}

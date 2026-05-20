@@ -7,3 +7,12 @@ django-debug-toolbar
 Faker
 Pillow
 psycopg2-binary
+
+celery==5.4.0
+redis==5.0.8
+django-redis==5.4.0
+redbeat
+pycent
+
+requests==2.32.3
+PyJWT==2.9.0
